@@ -42,75 +42,150 @@ module path_planner
 
 ////////////////////////WRITE YOUR CODE FROM HERE////////////////////
 
-reg [11:0] dist [27:0] = 12'b1111111_11011; //infty(1111111) + 27(11011)
-// Arjun - "I don't think we can do this, use a for loop to initialize"
-// https://stackoverflow.com/questions/29053120/initializing-arrays-in-verilog
-reg [27:0] visited = 27'b0100000000000000000000000000;
+reg [11:0] dist [0:27]; 
+
+reg [27:0] visited = 28'b0100_0000_0000_0000_0000_0000_0000;
 reg [4:0] visnum = 5'b00000;	//Max value = 26 (Nodes 0 to 25)
-reg [4:0] snode; // Arjun - "Are you initializing it to zero?"
-reg [4:0] enode;
+//reg [4:0] snode; 
+//reg [4:0] enode;
 
 //For FSM
 reg [3:0] state = 3'b000;
-reg [4:0] currnode = snode;
-reg [4:0] prevnode = snode; // "why snode?""
+reg [4:0] currnode;
+reg [4:0] prevnode = 5'b11011; 
+reg [4:0] nextnode = 5'b11011;
+wire [31:0] graph_op;
 
-assign snode = s_node;
-assign enode = e_node; 
+reg [7:0] pt1;
+reg [7:0] pt2;
+reg [7:0] pt3;
+reg [7:0] pt4;
 
-dist[snode] = {3'b000, snode};
+reg [6:0] calcdist;
+reg [6:0] min_dist;
+reg [4:0] p_node;
+reg [4:0] c_node;
 
-case(state) begin // "case statement should be within always/initial block"
-	//State to initialize all values for the current node; MAKE SOME LOGIC TO UPDATE DIST FROM GRAPH ???
-	3'b000: begin 
-		//The 4 nodes ie:points connected
-		//CHANGE DIST TO GRAPH AND CORRECT THIS
-		reg [11:0] pt1 = dist[currnode][0];
-		reg [11:0] pt2 = dist[currnode][1];
-		reg [11:0] pt3 = dist[currnode][2];
-		reg [11:0] pt4 = dist[currnode][3];
+initial dist[s_node] = {3'b000, s_node}; // IS IT INFTY?
 
-		state <= 3'b001;
-	end
-	// Start looking at all the 4 nodes connected to currnode ie: Updating dist
-	// Calculate full tot distance and see if calc is lesser before adding it to dist
-	3'b001: begin
-		reg [6:0] calcdist = dist[currnode][11:5];
-		dist[pt1[4:0]] = {pt1[11:5]+calcdist, currnode};
-		dist[pt2[4:0]] = {pt1[11:5]+calcdist, currnode};
-		dist[pt3[4:0]] = {pt1[11:5]+calcdist, currnode};
-		dist[pt4[4:0]] = {pt1[11:5]+calcdist, currnode};
+integer i;
+integer j;
+initial begin
+  for (i=0;i<=27;i=i+1)
+	dist[i] = 12'b1111111_11011; //infty(1111111) + 27(11011)
+end
 
-		state <= 3'b010;
-	end
-	//To calculate min ie nextnode : The for loop from Arjun
-	/*****
+initial_graph map(currnode, graph_op);
 
-	******/
-	min_dist = 7'b111_1111; // infty
-	for (int i = 0; i < node_count; i = i+1) begin
-		if ((!visited[i]) && (i != currnode)) begin // look at all unvisited nodes
-			if (dist[i][11:5] < min_dist) begin
-				nextnode = i;
-				min_dist = dist[i][11:5];
-			end
+always @(posedge clk) begin
+	case(state) 
+		//State to initialize all values for the current node; MAKE SOME LOGIC TO UPDATE DIST FROM GRAPH ???
+		3'b000: begin
+			if (start) begin
+				currnode = s_node;
+				state = 3'b001;
+			end else state = 3'b000;
+			
+			//The 4 nodes, i.e., points connected
+			//CHANGE DIST TO GRAPH AND CORRECT THIS
+			pt1 = graph_op[0+:8]; // [7:0] -----> 5'b node, 3'b separation
+			pt2 = graph_op[8+:8]; // [15:8]
+			pt3 = graph_op[16+:8]; // [23:16]
+			pt4 = graph_op[24+:8]; // [31:24]
+			
 		end
-	end
+		// Start looking at all the 4 nodes connected to currnode ie: Updating dist
+		// Calculate full tot distance and see if calc is lesser before adding it to dist
+		// 1-by-1
+		3'b001: begin
+			calcdist = dist[currnode][11:5];
 
-	3'b010: begin
+			// pt1 -----> 5'b node, 3'b separation [Neighbour 1]
+			if (!visited[pt1[7:3]] && (pt1[2:0] != 3'b111)) begin
+				calcdist = dist[currnode][11:5] + pt1[2:0];
 
-		state <= 3'b011;
-	end
-	//End state
-	3'b011: begin
-		visited[currnode] = 1'b1;
-		visnum <= visnum + 1;
-		prevnode <= currnode;
-		currnode <= nextnode;	//nextnode = the decided currnode for next iteration; WHERE TO DEFINE IT
+				if (calcdist < dist[pt1[7:3]][11:5]) dist[pt1[7:3]] = {calcdist, currnode};
+			end
+			state <= 3'b010;
+		end
 
-		state <= 3'b000;
-	end
-endcase
+		3'b010: begin
+			calcdist = dist[currnode][11:5];
+			
+			// pt2 -----> 5'b node, 3'b separation [Neighbour 2]
+			if (!visited[pt2[7:3]] && (pt2[2:0] != 3'b111)) begin
+				calcdist = dist[currnode][11:5] + pt2[2:0];
+
+				if (calcdist < dist[pt2[7:3]][11:5]) dist[pt2[7:3]] = {calcdist, currnode};
+			end
+			state <= 3'b011;
+		end
+
+		3'b011: begin
+			calcdist = dist[currnode][11:5];
+			
+			// pt3 -----> 5'b node, 3'b separation [Neighbour 3]
+			if (!visited[pt3[7:3]] && (pt3[2:0] != 3'b111)) begin
+				calcdist = dist[currnode][11:5] + pt3[2:0];
+
+				if (calcdist < dist[pt3[7:3]][11:5]) dist[pt3[7:3]] = {calcdist, currnode};
+			end
+			state <= 3'b100;
+		end
+
+		3'b100: begin
+			calcdist = dist[currnode][11:5];
+			
+			// pt4 -----> 5'b node, 3'b separation [Neighbour 4]
+			if (!visited[pt4[7:3]] && (pt4[2:0] != 3'b111)) begin
+				calcdist = dist[currnode][11:5] + pt4[2:0];
+
+				if (calcdist < dist[pt4[7:3]][11:5]) dist[pt4[7:3]] = {calcdist, currnode};
+			end
+			state <= 3'b101;
+		end
+
+		3'b101: begin
+
+			visited[currnode] = 1'b1;
+			visnum = visnum + 1;
+			//To calculate minimum dist., i.e., nextnode : for loop
+			min_dist = 7'b111_1111; // infty
+			for (i = 0; i < node_count; i = i+1) begin
+				if ((!visited[i]) && (i != currnode)) begin // look at all unvisited nodes
+					if (dist[i][11:5] < min_dist) begin
+						nextnode = i;
+						min_dist = dist[i][11:5];
+					end
+				end
+			end			
+			prevnode <= currnode;
+			currnode <= nextnode;	
+
+			state <= 3'b110;
+		end
+
+		//End state
+		3'b110: begin
+			if ((visited[e_node]) == 1'b1) begin
+
+				c_node = e_node;
+				for (j=0; j<10; j=j+1) begin
+					if (c_node != 5'd27) begin
+						final_path[5*j+:5] = c_node;
+						p_node = dist[c_node][4:0];
+						c_node = p_node;
+					end
+					else begin 
+						final_path[5*j+:5] = 5'd27;
+					end
+				end
+				done = 1'b1;
+			end
+			else state <= 3'b000;
+		end
+	endcase
+end
 
 ////////////////////////YOUR CODE ENDS HERE//////////////////////////
 endmodule
