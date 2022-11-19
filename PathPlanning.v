@@ -1,4 +1,6 @@
 // SM : Task 2 C : Path Planning
+//Authors : Kishore, Arjun, Shashidhar, Ayush
+//Implementing Djikstra's Algorithm in verilog
 /*
 Instructions
 -------------------
@@ -45,14 +47,10 @@ module path_planner
 reg [11:0] dist [0:27]; 
 
 reg [27:0] visited = 28'b0100_0000_0000_0000_0000_0000_0000;
-reg [4:0] visnum = 5'b00000;	//Max value = 26 (Nodes 0 to 25)
-//reg [4:0] snode; 
-//reg [4:0] enode;
 
 //For FSM
 reg [3:0] state = 3'b000;
 reg [4:0] currnode;
-reg [4:0] prevnode = 5'b11011; 
 reg [4:0] nextnode = 5'b11011;
 wire [31:0] graph_op;
 
@@ -66,8 +64,8 @@ reg [6:0] min_dist;
 reg [4:0] p_node;
 reg [4:0] c_node;
 
-initial dist[s_node] = {3'b000, s_node}; // IS IT INFTY?
-
+initial dist[s_node] = {3'b000, s_node};
+initial final_path = 0;
 integer i;
 integer j;
 initial begin
@@ -79,25 +77,31 @@ initial_graph map(currnode, graph_op);
 
 always @(posedge clk) begin
 	case(state) 
-		//State to initialize all values for the current node; MAKE SOME LOGIC TO UPDATE DIST FROM GRAPH ???
+		//State to initialize all values for the current node;
 		3'b000: begin
 			if (start) begin
 				currnode = s_node;
+				visited = 28'b0100_0000_0000_0000_0000_0000_0000;
+				done = 0;
+			  	for (i=0;i<=27;i=i+1) dist[i] = 12'b1111111_11011; //infty(1111111) + 27(11011)
+				
 				state = 3'b001;
+				//$display("Start node: %d", s_node);
 			end else state = 3'b000;
 			
+		end
+
+		3'b001: begin
 			//The 4 nodes, i.e., points connected
-			//CHANGE DIST TO GRAPH AND CORRECT THIS
 			pt1 = graph_op[0+:8]; // [7:0] -----> 5'b node, 3'b separation
 			pt2 = graph_op[8+:8]; // [15:8]
 			pt3 = graph_op[16+:8]; // [23:16]
 			pt4 = graph_op[24+:8]; // [31:24]
-			
-		end
-		// Start looking at all the 4 nodes connected to currnode ie: Updating dist
-		// Calculate full tot distance and see if calc is lesser before adding it to dist
-		// 1-by-1
-		3'b001: begin
+			//$display("%d", currnode);
+
+			// Start looking at all the 4 nodes connected to currnode ie: Updating dist
+			// Calculate full tot distance and see if calc is lesser before adding it to dist
+			// 1-by-1
 			calcdist = dist[currnode][11:5];
 
 			// pt1 -----> 5'b node, 3'b separation [Neighbour 1]
@@ -106,7 +110,7 @@ always @(posedge clk) begin
 
 				if (calcdist < dist[pt1[7:3]][11:5]) dist[pt1[7:3]] = {calcdist, currnode};
 			end
-			state <= 3'b010;
+			state = 3'b010;
 		end
 
 		3'b010: begin
@@ -118,7 +122,7 @@ always @(posedge clk) begin
 
 				if (calcdist < dist[pt2[7:3]][11:5]) dist[pt2[7:3]] = {calcdist, currnode};
 			end
-			state <= 3'b011;
+			state = 3'b011;
 		end
 
 		3'b011: begin
@@ -130,7 +134,7 @@ always @(posedge clk) begin
 
 				if (calcdist < dist[pt3[7:3]][11:5]) dist[pt3[7:3]] = {calcdist, currnode};
 			end
-			state <= 3'b100;
+			state = 3'b100;
 		end
 
 		3'b100: begin
@@ -142,13 +146,12 @@ always @(posedge clk) begin
 
 				if (calcdist < dist[pt4[7:3]][11:5]) dist[pt4[7:3]] = {calcdist, currnode};
 			end
-			state <= 3'b101;
+			state = 3'b101;
 		end
 
 		3'b101: begin
 
 			visited[currnode] = 1'b1;
-			visnum = visnum + 1;
 			//To calculate minimum dist., i.e., nextnode : for loop
 			min_dist = 7'b111_1111; // infty
 			for (i = 0; i < node_count; i = i+1) begin
@@ -158,11 +161,10 @@ always @(posedge clk) begin
 						min_dist = dist[i][11:5];
 					end
 				end
-			end			
-			prevnode <= currnode;
-			currnode <= nextnode;	
+			end
+			currnode = nextnode;	
 
-			state <= 3'b110;
+			state = 3'b110;
 		end
 
 		//End state
@@ -179,14 +181,15 @@ always @(posedge clk) begin
 					else begin 
 						final_path[5*j+:5] = 5'd27;
 					end
+					//$display("%d th node is %d", 9-j, final_path[5*j+:5]);
 				end
 				done = 1'b1;
+				state = 3'b000;
 			end
-			else state <= 3'b000;
+			else state = 3'b001;
 		end
 	endcase
 end
-
 ////////////////////////YOUR CODE ENDS HERE//////////////////////////
 endmodule
 ///////////////////////////////MODULE ENDS///////////////////////////
