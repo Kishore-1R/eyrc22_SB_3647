@@ -10,7 +10,7 @@
   **Problem Statement** : Find the shortest path between two nodes in the arena using any path planning algorithm.
   <img src="https://lh4.googleusercontent.com/r6UFOHhcKxqok5h9F76prWv4ka6pO9_IBsquvMwHqHvV47mwfFyMLeXcT8rXrxDPKue76E80GVJtkgfOD4QKaacMPKgM1WiJZUpY5-pHEzZbqaoswvT9_CLsYQXkX8cp2hwzgEOFH0q-2UyzsfXWhJL_0I38_UtgSOApf6xiGvXtO6l6yWWPOHUkEA" width="500" height="500">
   
-  We used the A* algorithm for solving this problem.
+  We used the Dijkstra algorithm for solving this problem.
  
 
 
