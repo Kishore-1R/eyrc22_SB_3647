@@ -11,6 +11,9 @@
   * [Task 1C](https://github.com/Kishore-R-0x07/eyrc22_SB_3647/tree/main/Task%201/Task%201C) : Frequency Counter <br>
   **Problem Statement** : Design a frequency counter which detects frequency of input signal.
   
+  * [Task 1D](https://github.com/Kishore-R-0x07/eyrc22_SB_3647/tree/main/Task%201/Task%201D) : Frequency Scaling and PWM <br>
+  **Problem Statement** : Implement frequency scaling in Verilog HDL and also implement Pulse Width Modulation.
+  
 
 - ## Task - 2
 
