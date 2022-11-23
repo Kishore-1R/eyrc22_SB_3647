@@ -2,6 +2,11 @@
 
 - ## Task - 1
   _Objective_: To understand Verilog HDL basics and design methodologies. 
+  * [Task 1A](https://github.com/Kishore-R-0x07/eyrc22_SB_3647/tree/main/Task%201/Task%201A) : Combinational Circuit <br>
+  ** Aim ** : The aim is to design a combinational circuit to implement 3-input logic function using 8:1 multiplexer and octal-to-binary encoder.
+  
+  * [Task 1C](
+  
 
 - ## Task - 2
 
