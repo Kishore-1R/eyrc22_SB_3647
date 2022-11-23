@@ -3,17 +3,17 @@
 - ## Task - 1
   _Objective_: To understand Verilog HDL basics and design methodologies. 
   * [Task 1A](https://github.com/Kishore-R-0x07/eyrc22_SB_3647/tree/main/Task%201/Task%201A) : Combinational Circuit <br>
-  **Aim** : The aim is to design a combinational circuit to implement 3-input logic function using 8:1 multiplexer and octal-to-binary encoder.
+  **Problem Statement** : Design a combinational circuit to implement 3-input logic function using 8:1 multiplexer and octal-to-binary encoder.
   
   * [Task 1C](https://github.com/Kishore-R-0x07/eyrc22_SB_3647/tree/main/Task%201/Task%201C) : Frequency Counter <br>
-  **Aim** : The aim is to design a frequency counter which detects frequency of input signal.
+  **Problem Statement** : Design a frequency counter which detects frequency of input signal.
   
 
 - ## Task - 2
 
   _Objective_: To study ADC, UART communication protocol, and path planning algorithm.
   * [Task 2A](https://github.com/Kishore-R-0x07/eyrc22_SB_3647/tree/main/Task%202/Task%202A) : ADC <br>
-  **Aim** : The aim is to design a control module which will communicate with on board ADC (Analog to Digital Converter) and fetch the digital output.
+  **Problem Statement** : Design a control module which will communicate with on board ADC (Analog to Digital Converter) and fetch the digital output.
   
   * [Task 2C](Task%202/Task%202C) : Path Planning <br>
   **Problem Statement** : Find the shortest path between two nodes in the arena using any path planning algorithm.
