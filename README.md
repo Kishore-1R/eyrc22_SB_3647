@@ -11,7 +11,10 @@
 
 - ## Task - 2
 
-  _Objective_: To study ADC, UART communication protocol, and path planning algorithm. 
+  _Objective_: To study ADC, UART communication protocol, and path planning algorithm.
+  * [Task 2A](https://github.com/Kishore-R-0x07/eyrc22_SB_3647/tree/main/Task%202/Task%202A) : ADC <br>
+  **Aim** : The aim is to design a control module which will communicate with on board ADC (Analog to Digital Converter) and fetch the digital output.
+  
   * [Task 2C](Task%202/Task%202C) : Path Planning <br>
   **Problem Statement** : Find the shortest path between two nodes in the arena using any path planning algorithm.
   <img src="https://lh4.googleusercontent.com/r6UFOHhcKxqok5h9F76prWv4ka6pO9_IBsquvMwHqHvV47mwfFyMLeXcT8rXrxDPKue76E80GVJtkgfOD4QKaacMPKgM1WiJZUpY5-pHEzZbqaoswvT9_CLsYQXkX8cp2hwzgEOFH0q-2UyzsfXWhJL_0I38_UtgSOApf6xiGvXtO6l6yWWPOHUkEA" width="500" height="500">
