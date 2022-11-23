@@ -5,6 +5,9 @@
   * [Task 1A](https://github.com/Kishore-R-0x07/eyrc22_SB_3647/tree/main/Task%201/Task%201A) : Combinational Circuit <br>
   **Problem Statement** : Design a combinational circuit to implement 3-input logic function using 8:1 multiplexer and octal-to-binary encoder.
   
+  * [Task 1B](https://github.com/Kishore-R-0x07/eyrc22_SB_3647/tree/main/Task%201/Task%201B) : Finite State Machine <br>
+  **Problem Statement** : Design a Finite State Machine in Verilog HDL to detect sequence/pattern.
+  
   * [Task 1C](https://github.com/Kishore-R-0x07/eyrc22_SB_3647/tree/main/Task%201/Task%201C) : Frequency Counter <br>
   **Problem Statement** : Design a frequency counter which detects frequency of input signal.
   
